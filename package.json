@@ -5,8 +5,7 @@
   "main": "api/index.js",
   "scripts": {
     "start": "node api/index.js",
-    "dev": "node api/index.js",
-    "build": "echo 'PlacementPro Vercel Zero-Config Build Complete'"
+    "dev": "node api/index.js"
   },
   "keywords": [
     "placementpro",
