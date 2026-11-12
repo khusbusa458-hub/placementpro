@@ -78,8 +78,13 @@ async function requestHandler(req, res) {
     return res.end();
   }
 
-  const parsedUrl = new URL(req.url, 'http://localhost');
-  const pathname = parsedUrl.pathname;
+  const rawUrl = req.headers['x-matched-path'] || req.url;
+  const parsedUrl = new URL(rawUrl, 'http://localhost');
+  let pathname = parsedUrl.pathname;
+  if ((pathname.includes('[...path]') || pathname === '/api') && req.query && req.query.path) {
+    const segments = Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path;
+    pathname = '/api/' + segments;
+  }
   const body = req.method === 'POST' ? await parseBody(req) : {};
 
   // 1. Health & Root Check
