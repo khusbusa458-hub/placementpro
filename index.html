@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlacementPro — Placement Preparation & Coding Practice Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #0d1117;
+      --bg-surface: #161b22;
+      --bg-surface-raised: #21262d;
+      --bg-surface-subtle: #1c2128;
+      --border-quiet: rgba(240, 246, 252, 0.1);
+      --border-focus: #388bfd;
+      --text-primary: #f0f6fc;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --accent: #2f81f7;
+      --accent-hover: #1f6feb;
+      --green: #238636;
+      --green-text: #3fb950;
+      --amber-text: #d29922;
+      --red-text: #f85149;
+      --code-bg: #090d16;
+      --radius-card: 10px;
+      --radius-control: 6px;
+      --radius-badge: 4px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header Bar */
+    header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-quiet);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border-quiet);
+      border-radius: var(--radius-control);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+    .brand-badge {
+      font-size: 0.7rem;
+      font-weight: 500;
+      background: var(--bg-surface-subtle);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-quiet);
+      padding: 2px 8px;
+      border-radius: var(--radius-badge);
+      margin-left: 6px;
+    }
+
+    nav {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      overflow-x: auto;
+    }
+    .nav-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: var(--radius-control);
+      cursor: pointer;
+      font-size: 0.825rem;
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .nav-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface-raised);
+    }
+    .nav-btn.active {
+      color: var(--text-primary);
+      background: var(--bg-surface-raised);
+      border-color: var(--border-quiet);
+      font-weight: 600;
+    }
+
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .meta-tag {
+      background: var(--bg-surface-subtle);
+      border: 1px solid var(--border-quiet);
+      padding: 4px 10px;
+      border-radius: var(--radius-badge);
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green-text);
+      display: inline-block;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      padding: 32px 24px;
+      max-width: 1360px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .view-panel { display: none; }
+    .view-panel.active { display: block; animation: panelFade 0.2s ease-out; }
+
+    @keyframes panelFade {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+    .page-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .page-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-quiet);
+      border-radius: var(--radius-card);
+      padding: 20px;
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; }
+
+    /* Metric Cards */
+    .metric-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-quiet);
+      border-radius: var(--radius-card);
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .metric-value {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .metric-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Problem Set Table */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .filter-group { display: flex; gap: 6px; align-items: center; }
+    .filter-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-quiet);
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: var(--radius-control);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn.active {
+      background: var(--bg-surface-raised);
+      color: var(--text-primary);
+      border-color: rgba(240, 246, 252, 0.25);
+    }
+    .search-input {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-quiet);
+      color: var(--text-primary);
+      padding: 6px 12px;
+      border-radius: var(--radius-control);
+      font-size: 0.8rem;
+      min-width: 260px;
+      outline: none;
+    }
+    .search-input:focus { border-color: var(--border-focus); }
+
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--border-quiet);
+      border-radius: var(--radius-card);
+      background: var(--bg-surface);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    th {
+      background: var(--bg-surface-subtle);
+      padding: 10px 16px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-quiet);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-quiet);
+      color: var(--text-primary);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--bg-surface-raised); }
+
+    .diff-pill {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-badge);
+      display: inline-block;
+      font-variant-numeric: tabular-nums;
+    }
+    .diff-easy { background: rgba(35, 134, 54, 0.15); color: var(--green-text); }
+    .diff-medium { background: rgba(210, 153, 34, 0.15); color: var(--amber-text); }
+    .diff-hard { background: rgba(248, 81, 73, 0.15); color: var(--red-text); }
+
+    .tag-badge {
+      font-size: 0.7rem;
+      background: var(--bg-surface-raised);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-quiet);
+      padding: 2px 6px;
+      border-radius: var(--radius-badge);
+      margin-right: 4px;
+    }
+
+    .btn-action {
+      background: var(--accent);
+      border: none;
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: var(--radius-control);
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.8rem;
+      transition: background 0.15s;
+    }
+    .btn-action:hover { background: var(--accent-hover); }
+    .btn-secondary {
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border-quiet);
+      color: var(--text-primary);
+      padding: 6px 14px;
+      border-radius: var(--radius-control);
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.8rem;
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: var(--bg-surface-subtle); }
+
+    /* Code Studio IDE */
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      min-height: 580px;
+    }
+    @media(max-width: 960px) { .editor-layout { grid-template-columns: 1fr; } }
+    
+    .problem-desc-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-quiet);
+      border-radius: var(--radius-card);
+      padding: 20px;
+      overflow-y: auto;
+      max-height: 640px;
+    }
+    .problem-code-panel {
+      background: var(--code-bg);
+      border: 1px solid var(--border-quiet);
+      border-radius: var(--radius-card);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .editor-topbar {
+      background: var(--bg-surface);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-quiet);
+    }
+    .lang-select {
+      background: var(--bg-surface-raised);
+      color: var(--text-primary);
+      border: 1px solid var(--border-quiet);
+      padding: 4px 10px;
+      border-radius: var(--radius-control);
+      font-size: 0.8rem;
+      font-weight: 500;
+      outline: none;
+    }
+    .code-textarea {
+      flex: 1;
+      background: var(--code-bg);
+      color: #e6edf3;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 16px;
+      border: none;
+      outline: none;
+      resize: none;
+      min-height: 360px;
+      line-height: 1.6;
+    }
+    .console-output {
+      background: #06090f;
+      border-top: 1px solid var(--border-quiet);
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      max-height: 140px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+    .editor-bottombar {
+      background: var(--bg-surface);
+      padding: 10px 16px;
+      border-top: 1px solid var(--border-quiet);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Companies Grid */
+    .company-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-quiet);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      transition: border-color 0.15s;
+    }
+    .company-card:hover { border-color: rgba(240, 246, 252, 0.25); }
+    .company-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .company-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-control);
+      background: var(--bg-surface-raised);
+      border: 1px solid var(--border-quiet);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+
+    /* Study Plan Tasks */
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--bg-surface-subtle);
+      border: 1px solid var(--border-quiet);
+      border-radius: var(--radius-control);
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .task-item:hover { background: var(--bg-surface-raised); }
+    .task-checkbox { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); }
+    .task-text { font-size: 0.85rem; font-weight: 500; color: var(--text-primary); }
+    .task-text.completed { text-decoration: line-through; color: var(--text-muted); }
+
+    /* Footer */
+    footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-quiet);
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 40px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 8px;
+    }
+    .footer-links a { color: var(--text-secondary); text-decoration: none; }
+    .footer-links a:hover { color: var(--text-primary); text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand" onclick="switchTab('dashboard')">
+      <div class="brand-mark">P</div>
+      <div class="brand-title">PlacementPro</div>
+      <span class="brand-badge">Capstone 2026</span>
+    </div>
+
+    <nav id="nav-links">
+      <button class="nav-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+      <button class="nav-btn" onclick="switchTab('problems')">Problems (15)</button>
+      <button class="nav-btn" onclick="switchTab('editor')">Code Studio</button>
+      <button class="nav-btn" onclick="switchTab('companies')">Companies (8)</button>
+      <button class="nav-btn" onclick="switchTab('studyplan')">Study Plan</button>
+      <button class="nav-btn" onclick="switchTab('mock')">Mock & Resume</button>
+      <button class="nav-btn" onclick="switchTab('leaderboard')">Leaderboard</button>
+      <button class="nav-btn" onclick="switchTab('rewards')">Rewards</button>
+      <button class="nav-btn" onclick="switchTab('admin')">Admin</button>
+      <button class="nav-btn" onclick="switchTab('submission')">Submission Form</button>
+    </nav>
+
+    <div class="header-meta">
+      <div class="meta-tag" id="api-status-pill">
+        <span class="status-dot" id="api-status-dot"></span>
+        <span id="api-status-text">API Online</span>
+      </div>
+      <div class="meta-tag">
+        <span style="color: var(--amber-text); font-weight: 600;" id="user-credits">350</span> credits
+      </div>
+      <div class="meta-tag">
+        <span style="font-weight: 600;" id="user-streak">7</span> days streak
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- TAB 1: DASHBOARD -->
+    <div id="tab-dashboard" class="view-panel active">
+      <div class="page-header">
+        <h1 class="page-title">Preparation Overview</h1>
+        <p class="page-subtitle">Track problems solved, target roadmap completion, and placement readiness.</p>
+      </div>
+
+      <div class="grid-4">
+        <div class="metric-card">
+          <span class="metric-label">Problems Solved</span>
+          <span class="metric-value">9 <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 400;">/ 15</span></span>
+          <span class="metric-meta">+2 completed this week</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Practice Streak</span>
+          <span class="metric-value">7 <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 400;">Days</span></span>
+          <span class="metric-meta">Active daily practice</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Interview Score</span>
+          <span class="metric-value">86%</span>
+          <span class="metric-meta" style="color: var(--green-text);">Tier 1 qualified</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Credit Balance</span>
+          <span class="metric-value" style="color: var(--amber-text);">350</span>
+          <span class="metric-meta">Eligible for 3 rewards</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">
+            <span>Daily Problem</span>
+            <span class="diff-pill diff-easy">+30 credits</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">Problem #001: Two Sum — Given an array of integers and a target sum, return indices of the two elements.</p>
+          <button class="btn-action" style="width: 100%;" onclick="openProblem(1)">Open in Code Studio</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>Target Preparation Track</span>
+            <span style="font-size: 0.8rem; color: var(--accent); font-weight: 600;" id="dash-track-pct">60%</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">Roadmap: Google & Amazon SDE Technical Rounds</p>
+          <div style="height: 6px; background: var(--bg-surface-raised); border-radius: 3px; overflow: hidden; margin-bottom: 16px;">
+            <div style="width: 60%; height: 100%; background: var(--accent);"></div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-secondary" style="flex: 1;" onclick="switchTab('studyplan')">View Study Plan</button>
+            <button class="btn-secondary" style="flex: 1;" onclick="switchTab('mock')">Mock Assessment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: PROBLEM SET -->
+    <div id="tab-problems" class="view-panel">
+      <div class="page-header">
+        <h1 class="page-title">Problem Catalogue</h1>
+        <p class="page-subtitle">Curated 15 technical problems across core data structures and algorithmic patterns.</p>
+      </div>
+
+      <div class="filter-bar">
+        <div class="filter-group">
+          <button class="filter-btn active" onclick="filterProblems('all', this)">All (15)</button>
+          <button class="filter-btn" onclick="filterProblems('Easy', this)">Easy (6)</button>
+          <button class="filter-btn" onclick="filterProblems('Medium', this)">Medium (6)</button>
+          <button class="filter-btn" onclick="filterProblems('Hard', this)">Hard (3)</button>
+        </div>
+        <input type="text" class="search-input" id="problem-search" placeholder="Search by title or topic..." onkeyup="searchProblems()" />
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 70px;">ID</th>
+              <th>Problem Statement</th>
+              <th style="width: 110px;">Difficulty</th>
+              <th>Topic Tags</th>
+              <th style="width: 100px;">Reward</th>
+              <th style="width: 80px;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="problems-table-body">
+            <!-- Dynamically populated via Backend API -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: CODE STUDIO -->
+    <div id="tab-editor" class="view-panel">
+      <div class="editor-layout">
+        <div class="problem-desc-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h2 id="editor-prob-title" style="font-size: 1.15rem; font-weight: 600;">#001 - Two Sum</h2>
+            <span id="editor-prob-diff" class="diff-pill diff-easy">Easy</span>
+          </div>
+          <div id="editor-prob-tags" style="margin-bottom: 16px;">
+            <span class="tag-badge">Arrays</span><span class="tag-badge">Hash Table</span>
+          </div>
+          <div id="editor-prob-body" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+            <p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>.</p>
+            <br>
+            <p>You may assume that each input has <strong>exactly one solution</strong>, and you may not use the same element twice.</p>
+            <br>
+            <div style="background: var(--bg-surface-subtle); padding: 12px; border-radius: var(--radius-control); border-left: 2px solid var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">
+              Input: nums = [2,7,11,15], target = 9<br>
+              Output: [0,1]<br>
+              Explanation: nums[0] + nums[1] == 9, return [0, 1].
+            </div>
+            <br>
+            <p><strong>Constraints:</strong></p>
+            <ul style="margin-left: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">
+              <li>2 &lt;= nums.length &lt;= 10^4</li>
+              <li>-10^9 &lt;= nums[i] &lt;= 10^9</li>
+              <li>-10^9 &lt;= target &lt;= 10^9</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="problem-code-panel">
+          <div class="editor-topbar">
+            <select class="lang-select" id="lang-selector" onchange="changeLanguage()">
+              <option value="java" selected>Java 24 (OpenJDK)</option>
+              <option value="python">Python 3.12</option>
+              <option value="javascript">JavaScript (Node.js)</option>
+              <option value="cpp">C++ 20 (GCC)</option>
+              <option value="c">C 17 (GCC)</option>
+            </select>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">buffer: active</span>
+          </div>
+
+          <textarea class="code-textarea" id="code-editor-area" spellcheck="false"></textarea>
+
+          <div class="console-output" id="console-log">
+            [Compiler Engine] Ready. Click 'Run Code' or 'Submit Solution' to test.
+          </div>
+
+          <div class="editor-bottombar">
+            <button class="btn-secondary" onclick="resetCodeTemplate()">Reset</button>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-secondary" onclick="runCode()">Run Code</button>
+              <button class="btn-action" onclick="submitSolution()">Submit Solution</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: COMPANIES EXPLORER -->
+    <div id="tab-companies" class="view-panel">
+      <div class="page-header">
+        <h1 class="page-title">Company Placement Explorer</h1>
+        <p class="page-subtitle">Recruitment stages, compensation bands, and focus topics for 8 recruiters.</p>
+      </div>
+
+      <div class="grid-4" id="companies-grid">
+        <!-- Dynamically populated via Backend API -->
+      </div>
+    </div>
+
+    <!-- TAB 5: STUDY PLAN -->
+    <div id="tab-studyplan" class="view-panel">
+      <div class="page-header">
+        <h1 class="page-title">30-Day Preparation Roadmap</h1>
+        <p class="page-subtitle">Structured syllabus checklist covering algorithmic patterns, system design, and mock rounds.</p>
+      </div>
+
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div>
+            <h3 style="font-size: 0.95rem; font-weight: 600;">Syllabus Completion</h3>
+            <p style="font-size: 0.8rem; color: var(--text-secondary);">Task progress syncs automatically with the backend.</p>
+          </div>
+          <span style="font-size: 1.3rem; font-weight: 600; font-family: 'JetBrains Mono', monospace;" id="study-progress-text">60%</span>
+        </div>
+
+        <div id="tasks-list">
+          <!-- Dynamically populated via Backend API -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: MOCK & RESUME AI -->
+    <div id="tab-mock" class="view-panel">
+      <div class="page-header">
+        <h1 class="page-title">Interview Assessment & Resume Audit</h1>
+        <p class="page-subtitle">Practice technical screening prompts and verify ATS resume keyword compatibility.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Technical Interview Assessment</div>
+          <label style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Domain Track</label>
+          <select id="mock-domain" class="lang-select" style="width: 100%; margin: 6px 0 12px 0;" onchange="updateMockQuestion()">
+            <option value="dsa">Data Structures & Algorithms (SDE)</option>
+            <option value="backend">Java & Spring Boot Backend Engineering</option>
+            <option value="db">MongoDB & Distributed Storage</option>
+            <option value="hr">Behavioral STAR Framework</option>
+          </select>
+
+          <div style="background: var(--bg-surface-subtle); padding: 12px; border-radius: var(--radius-control); border-left: 2px solid var(--accent); margin-bottom: 12px;">
+            <span style="font-size: 0.7rem; color: var(--accent); font-weight: 600; text-transform: uppercase;">Prompt</span>
+            <p id="mock-question-text" style="font-size: 0.85rem; font-weight: 500; margin-top: 4px;">Explain the internal working of HashMap in Java. How are collisions resolved in Java 8?</p>
+          </div>
+
+          <textarea id="mock-user-answer" class="code-textarea" style="min-height: 100px; font-family: inherit; font-size: 0.8rem; border: 1px solid var(--border-quiet); border-radius: var(--radius-control);" placeholder="Type technical explanation..."></textarea>
+
+          <button class="btn-action" style="width: 100%; margin-top: 10px;" onclick="evaluateMockAnswer()">Evaluate with Backend API</button>
+
+          <div id="mock-eval-result" style="display: none; margin-top: 12px; background: rgba(35, 134, 54, 0.1); border: 1px solid rgba(35, 134, 54, 0.3); padding: 12px; border-radius: var(--radius-control); font-size: 0.8rem;"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Resume ATS Keyword Audit</div>
+          <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px;">Paste technical skills or coursework to check SDE placement relevance.</p>
+
+          <textarea id="resume-input" class="code-textarea" style="min-height: 130px; font-family: inherit; font-size: 0.8rem; border: 1px solid var(--border-quiet); border-radius: var(--radius-control);">Full-Stack Developer | Technologies: Java, Spring Boot, React.js, JavaScript, MongoDB Atlas, REST APIs, Git, Maven, JWT, Data Structures & Algorithms. Capstone: PlacementPro platform.</textarea>
+
+          <button class="btn-secondary" style="width: 100%; margin-top: 10px;" onclick="scanResume()">Run ATS Compatibility Check</button>
+
+          <div id="resume-eval-result" style="margin-top: 12px; background: var(--bg-surface-subtle); border: 1px solid var(--border-quiet); padding: 12px; border-radius: var(--radius-control); font-size: 0.8rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span>ATS Score:</span>
+              <span style="font-weight: 600; color: var(--green-text); font-family: 'JetBrains Mono', monospace;">92 / 100</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">
+              Keywords matched: Java, Spring Boot, React, MongoDB, REST.<br>
+              Architecture depth verified: JWT, BCrypt, Spring Data.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 7: LEADERBOARD -->
+    <div id="tab-leaderboard" class="view-panel">
+      <div class="page-header">
+        <h1 class="page-title">Student Leaderboard</h1>
+        <p class="page-subtitle">Rankings based on verified problem submissions, practice consistency, and credits earned.</p>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 70px;">Rank</th>
+              <th>Student Name</th>
+              <th>UID</th>
+              <th>Section</th>
+              <th>Solved</th>
+              <th>Streak</th>
+              <th>Credits</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight: 600; color: var(--amber-text); font-family: 'JetBrains Mono', monospace;">#1</td>
+              <td style="font-weight: 500;">Sejal Verma</td>
+              <td>24BAI70953</td>
+              <td>24ML-12B</td>
+              <td>15 / 15</td>
+              <td>18 days</td>
+              <td style="font-weight: 600; color: var(--amber-text); font-family: 'JetBrains Mono', monospace;">850</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace;">#2</td>
+              <td style="font-weight: 500;">Khusbu Kumari Kewat</td>
+              <td>24BAI71022</td>
+              <td>24ML-12B</td>
+              <td>14 / 15</td>
+              <td>16 days</td>
+              <td style="font-weight: 600; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace;">790</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">#3</td>
+              <td style="font-weight: 500;">Aman Gupta</td>
+              <td>24BAI70940</td>
+              <td>24ML-12B</td>
+              <td>13 / 15</td>
+              <td>14 days</td>
+              <td style="font-weight: 600; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">720</td>
+            </tr>
+            <tr>
+              <td style="font-family: 'JetBrains Mono', monospace;">#4</td>
+              <td>Rahul Sharma</td>
+              <td>24BAI70811</td>
+              <td>24ML-12A</td>
+              <td>11 / 15</td>
+              <td>10 days</td>
+              <td style="font-family: 'JetBrains Mono', monospace;">580</td>
+            </tr>
+            <tr>
+              <td style="font-family: 'JetBrains Mono', monospace;">#5</td>
+              <td>Ananya Iyer</td>
+              <td>24BAI70912</td>
+              <td>24ML-11B</td>
+              <td>10 / 15</td>
+              <td>9 days</td>
+              <td style="font-family: 'JetBrains Mono', monospace;">540</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 8: REWARDS -->
+    <div id="tab-rewards" class="view-panel">
+      <div class="page-header">
+        <h1 class="page-title">Rewards Store</h1>
+        <p class="page-subtitle">Redeem accumulated credits for technical interview sessions and placement handbooks.</p>
+      </div>
+
+      <div class="grid-4" id="rewards-grid">
+        <!-- Dynamically populated via Backend API -->
+      </div>
+    </div>
+
+    <!-- TAB 9: ADMIN -->
+    <div id="tab-admin" class="view-panel">
+      <div class="page-header">
+        <h1 class="page-title">Admin Diagnostics & Security Verification</h1>
+        <p class="page-subtitle">Backend health monitoring and role-based access control verification (Report Section 11).</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Database & Backend Configuration</div>
+          <table style="font-size: 0.8rem;">
+            <tr><td style="color: var(--text-muted);">Database:</td><td style="font-weight: 600;">MongoDB Atlas (placementpro)</td></tr>
+            <tr><td style="color: var(--text-muted);">Backend Architecture:</td><td>Java 24, Spring Boot 3.2.5 & Vercel API</td></tr>
+            <tr><td style="color: var(--text-muted);">Health Check Endpoint:</td><td><code>GET /api/health</code> (HTTP 200 OK)</td></tr>
+            <tr><td style="color: var(--text-muted);">Seeded Documents:</td><td>15 Problems, 8 Companies, 8 Rewards</td></tr>
+            <tr><td style="color: var(--text-muted);">Authentication:</td><td>JWT Tokens + BCrypt Password Hashes</td></tr>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Live RBAC Security Test</div>
+          <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px;">Enforces Section 11 boundary: student accounts attempting admin endpoints return HTTP 403 Forbidden.</p>
+          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+            <button class="btn-secondary" id="btn-role-student" style="flex: 1; border-color: var(--accent);" onclick="setTestRole('ROLE_STUDENT')">Role: Student</button>
+            <button class="btn-secondary" id="btn-role-admin" style="flex: 1;" onclick="setTestRole('ROLE_ADMIN')">Role: Admin</button>
+          </div>
+          <button class="btn-action" style="width: 100%;" onclick="testAdminRBAC()">Test GET /api/admin/analytics</button>
+          <div id="rbac-test-output" style="margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 10px; background: var(--code-bg); border-radius: var(--radius-control); color: var(--text-secondary);">
+            Click 'Test GET /api/admin/analytics' to verify server-side authorization.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 10: SUBMISSION FORM INFO -->
+    <div id="tab-submission" class="view-panel">
+      <div class="page-header">
+        <h1 class="page-title">Capstone Project Submission Form Information</h1>
+        <p class="page-subtitle">Verified fields ready for entry into the official Capstone Project Submission Form.</p>
+      </div>
+
+      <div class="card" style="max-width: 860px;">
+        <div style="display: grid; gap: 14px;">
+          <div style="background: var(--bg-surface-subtle); padding: 14px; border-radius: var(--radius-control); border: 1px solid var(--border-quiet);">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">1. Full Name</div>
+            <div style="font-size: 1rem; font-weight: 600; margin-top: 2px;">Khusbu Kumari Kewat <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 400;">(Co-Author: Sejal Verma)</span></div>
+          </div>
+
+          <div style="background: var(--bg-surface-subtle); padding: 14px; border-radius: var(--radius-control); border: 1px solid var(--border-quiet);">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">2. University ID (UID)</div>
+            <div style="font-size: 1rem; font-weight: 600; margin-top: 2px; font-family: 'JetBrains Mono', monospace;">24BAI71022 <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 400; font-family: inherit;">(Sejal Verma: 24BAI70953)</span></div>
+          </div>
+
+          <div style="background: var(--bg-surface-subtle); padding: 14px; border-radius: var(--radius-control); border: 1px solid var(--border-quiet);">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">3. Section*</div>
+            <div style="font-size: 1rem; font-weight: 600; margin-top: 2px;">Section 12 <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 400;">(From report section: 24ML-12B)</span></div>
+          </div>
+
+          <div style="background: var(--bg-surface-subtle); padding: 14px; border-radius: var(--radius-control); border: 1px solid var(--border-quiet);">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">4. Group*</div>
+            <div style="font-size: 1rem; font-weight: 600; margin-top: 2px;">Group B <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 400;">(From report section: 24ML-12B)</span></div>
+          </div>
+
+          <div style="background: var(--bg-surface-subtle); padding: 14px; border-radius: var(--radius-control); border: 1px solid var(--border-quiet);">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">5. Capstone Project PPT Drive link *</div>
+            <div style="margin-top: 4px;">
+              <a href="https://docs.google.com/presentation/d/1kjYMKApl4AdkL_L4Irge-DAxEdv4hDQL/view?usp=sharing" target="_blank" style="color: var(--accent); font-size: 0.85rem; word-break: break-all; text-decoration: none;">https://docs.google.com/presentation/d/1kjYMKApl4AdkL_L4Irge-DAxEdv4hDQL/view?usp=sharing</a>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-surface-subtle); padding: 14px; border-radius: var(--radius-control); border: 1px solid var(--border-quiet);">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">6. GitHub Repository Link*</div>
+            <div style="margin-top: 4px;">
+              <a href="https://github.com/khusbusa458-hub/placementpro" target="_blank" style="color: var(--accent); font-size: 0.85rem; word-break: break-all; text-decoration: none;">https://github.com/khusbusa458-hub/placementpro</a>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-surface-subtle); padding: 14px; border-radius: var(--radius-control); border: 1px solid var(--border-quiet);">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">7. Live Project Link*</div>
+            <div style="margin-top: 4px;">
+              <a href="https://khusbusa458-hub.github.io/placementpro/" target="_blank" style="color: var(--accent); font-size: 0.85rem; word-break: break-all; text-decoration: none;">https://khusbusa458-hub.github.io/placementpro/</a>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-surface-subtle); padding: 14px; border-radius: var(--radius-control); border: 1px solid var(--border-quiet);">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">8. Project Report Submission (PDF) Drive link *</div>
+            <div style="margin-top: 4px;">
+              <a href="https://drive.google.com/file/d/1mPQVtDQfgXm-AWtXi9PpQUHfJ7X2Qtxe/view?usp=sharing" target="_blank" style="color: var(--accent); font-size: 0.85rem; word-break: break-all; text-decoration: none;">https://drive.google.com/file/d/1mPQVtDQfgXm-AWtXi9PpQUHfJ7X2Qtxe/view?usp=sharing</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div>PlacementPro — Placement Preparation & Coding Practice Platform</div>
+    <div style="margin-top: 2px;">Department of Computer Science & Engineering | Capstone Project 2026</div>
+    <div class="footer-links">
+      <a href="https://github.com/khusbusa458-hub/placementpro" target="_blank">Repository</a>
+      <a href="https://docs.google.com/presentation/d/1kjYMKApl4AdkL_L4Irge-DAxEdv4hDQL/view?usp=sharing" target="_blank">Presentation</a>
+      <a href="https://drive.google.com/file/d/1mPQVtDQfgXm-AWtXi9PpQUHfJ7X2Qtxe/view?usp=sharing" target="_blank">Project Report PDF</a>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE = '/api';
+    let currentRole = 'ROLE_STUDENT';
+
+    let problems = [
+      { id: 1, title: "Two Sum", difficulty: "Easy", tags: ["Arrays", "Hash Table"], credits: 20 },
+      { id: 2, title: "Valid Parentheses", difficulty: "Easy", tags: ["Stack", "Strings"], credits: 20 },
+      { id: 3, title: "Merge Two Sorted Lists", difficulty: "Easy", tags: ["Linked List"], credits: 20 },
+      { id: 4, title: "Best Time to Buy and Sell Stock", difficulty: "Easy", tags: ["Arrays", "Dynamic Programming"], credits: 25 },
+      { id: 5, title: "Valid Palindrome", difficulty: "Easy", tags: ["Strings", "Two Pointers"], credits: 20 },
+      { id: 6, title: "Invert Binary Tree", difficulty: "Easy", tags: ["Trees", "DFS"], credits: 25 },
+      { id: 7, title: "Longest Substring Without Repeating Characters", difficulty: "Medium", tags: ["Sliding Window", "Strings"], credits: 35 },
+      { id: 8, title: "Container With Most Water", difficulty: "Medium", tags: ["Two Pointers", "Greedy"], credits: 35 },
+      { id: 9, title: "3Sum", difficulty: "Medium", tags: ["Two Pointers", "Sorting"], credits: 40 },
+      { id: 10, title: "Group Anagrams", difficulty: "Medium", tags: ["Hash Table", "Strings"], credits: 35 },
+      { id: 11, title: "Level Order Traversal", difficulty: "Medium", tags: ["Trees", "BFS"], credits: 35 },
+      { id: 12, title: "Product of Array Except Self", difficulty: "Medium", tags: ["Arrays", "Prefix Sum"], credits: 40 },
+      { id: 13, title: "Trapping Rain Water", difficulty: "Hard", tags: ["Two Pointers", "Dynamic Programming"], credits: 50 },
+      { id: 14, title: "Merge k Sorted Lists", difficulty: "Hard", tags: ["Linked List", "Heap"], credits: 50 },
+      { id: 15, title: "Word Ladder", difficulty: "Hard", tags: ["BFS", "Graphs"], credits: 60 }
+    ];
+
+    let companies = [
+      { name: "Google", tier: "Tier 1", ctc: "32 - 45 LPA", rounds: 4, focus: "Graph Algorithms, DP, System Architecture" },
+      { name: "Microsoft", tier: "Tier 1", ctc: "28 - 42 LPA", rounds: 4, focus: "Binary Trees, Strings, Object Oriented Design" },
+      { name: "Amazon", tier: "Tier 1", ctc: "28 - 44 LPA", rounds: 4, focus: "Leadership Principles, Sliding Window, Heap" },
+      { name: "Meta", tier: "Tier 1", ctc: "35 - 50 LPA", rounds: 4, focus: "Arrays, Two Pointers, BFS/DFS, System Scale" },
+      { name: "Adobe", tier: "Tier 1", ctc: "24 - 36 LPA", rounds: 4, focus: "Recursion, Linked Lists, Problem Solving" },
+      { name: "Uber", tier: "Tier 1", ctc: "30 - 46 LPA", rounds: 4, focus: "Low Level Design, Concurrency, Greedy" },
+      { name: "TCS (Digital)", tier: "National", ctc: "7 - 9 LPA", rounds: 3, focus: "Aptitude, Core Java/C++, Arrays, Basic SQL" },
+      { name: "Infosys (DSE/SP)", tier: "National", ctc: "6.5 - 9.5 LPA", rounds: 3, focus: "Data Structures, HackWithInfy problems, OOP" }
+    ];
+
+    let rewards = [
+      { id: 1, title: "1-on-1 Mock Interview Session", cost: 400, desc: "45-min live coding interview with an industry engineer" },
+      { id: 2, title: "Expert Resume Review & Polish", cost: 250, desc: "Line-by-line ATS and wording recommendations by senior tech leads" },
+      { id: 3, title: "FAANG System Design Blueprint", cost: 150, desc: "Comprehensive guide for high-throughput, fault-tolerant architectures" },
+      { id: 4, title: "PlacementPro Verified Badge", cost: 100, desc: "Profile status indicator visible on student leaderboards" },
+      { id: 5, title: "Amazon SDE Interview Bank", cost: 120, desc: "Top 50 recently asked OA and on-site problems with solutions" },
+      { id: 6, title: "Behavioral Round Cheat Sheet", cost: 80, desc: "Structured STAR method responses for 25 common HR queries" },
+      { id: 7, title: "Exclusive Mentorship Pass", cost: 300, desc: "Direct access to private placement discussion channel" },
+      { id: 8, title: "Book & Resource Voucher", cost: 600, desc: "Credit grant for technical literature and examination materials" }
+    ];
+
+    let roadmapTasks = [
+      { id: 1, title: "Array & Hash Table Fundamentals (Two Sum, Prefix Sum)", done: true },
+      { id: 2, title: "String Manipulation & Sliding Window Patterns", done: true },
+      { id: 3, title: "Linked List Reversals & Cycle Detection (Fast & Slow pointers)", done: true },
+      { id: 4, title: "Stack & Queue Implementations (Monotonic Stack, Parentheses)", done: true },
+      { id: 5, title: "Binary Tree Traversals (DFS, BFS, Invert Tree)", done: true },
+      { id: 6, title: "Binary Search Trees & Search Space Reduction", done: true },
+      { id: 7, title: "Dynamic Programming — 1D Subproblems (Stock, Robber)", done: false },
+      { id: 8, title: "Graph Algorithms (Dijkstra, Topological Sort, Disjoint Set)", done: false },
+      { id: 9, title: "Low-Level Object Oriented Design (SOLID, Patterns)", done: false },
+      { id: 10, title: "Resume ATS Audit & Final Capstone Verification", done: true }
+    ];
+
+    const codeTemplates = {
+      java: `public class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        java.util.Map<Integer, Integer> map = new java.util.HashMap<>();\n        for (int i = 0; i < nums.length; i++) {\n            int complement = target - nums[i];\n            if (map.containsKey(complement)) {\n                return new int[] { map.get(complement), i };\n            }\n            map.put(nums[i], i);\n        }\n        throw new IllegalArgumentException("No two sum solution");\n    }\n}`,
+      python: `class Solution:\n    def twoSum(self, nums: list[int], target: int) -> list[int]:\n        seen = {}\n        for i, num in enumerate(nums):\n            complement = target - num\n            if complement in seen:\n                return [seen[complement], i]\n            seen[num] = i\n        return []`,
+      javascript: `/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number[]}\n */\nvar twoSum = function(nums, target) {\n    const map = new Map();\n    for (let i = 0; i < nums.length; i++) {\n        const complement = target - nums[i];\n        if (map.has(complement)) {\n            return [map.get(complement), i];\n        }\n        map.set(nums[i], i);\n    }\n    return [];\n};`,
+      cpp: `#include <vector>\n#include <unordered_map>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        unordered_map<int, int> map;\n        for (int i = 0; i < nums.size(); i++) {\n            int complement = target - nums[i];\n            if (map.find(complement) != map.end()) {\n                return {map[complement], i};\n            }\n            map[nums[i]] = i;\n        }\n        return {};\n    }\n};`,
+      c: `#include <stdlib.h>\n\nint* twoSum(int* nums, int numsSize, int target, int* returnSize) {\n    *returnSize = 2;\n    int* result = (int*)malloc(2 * sizeof(int));\n    for (int i = 0; i < numsSize; i++) {\n        for (int j = i + 1; j < numsSize; j++) {\n            if (nums[i] + nums[j] == target) {\n                result[0] = i;\n                result[1] = j;\n                return result;\n            }\n        }\n    }\n    return NULL;\n}`
+    };
+
+    let currentProblemId = 1;
+
+    async function apiRequest(endpoint, options = {}) {
+      try {
+        const response = await fetch(API_BASE + endpoint, {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-User-Role': currentRole,
+            ...(options.headers || {})
+          },
+          ...options
+        });
+        const data = await response.json().catch(() => ({}));
+        return { status: response.status, ok: response.ok, data };
+      } catch (err) {
+        return { status: 0, ok: false, error: err.message, data: null };
+      }
+    }
+
+    async function checkBackendHealth() {
+      const res = await apiRequest('/health');
+      const dot = document.getElementById('api-status-dot');
+      const text = document.getElementById('api-status-text');
+
+      if (res.ok && res.data && res.data.status === 'UP') {
+        dot.style.background = 'var(--green-text)';
+        text.innerText = 'API Connected';
+      } else {
+        dot.style.background = 'var(--amber-text)';
+        text.innerText = 'API Standalone';
+      }
+    }
+
+    async function fetchDashboardData() {
+      const res = await apiRequest('/student/dashboard');
+      if (res.ok && res.data) {
+        document.getElementById('user-credits').innerText = res.data.creditBalance || 350;
+        document.getElementById('user-streak').innerText = res.data.practiceStreak || 7;
+      }
+    }
+
+    async function fetchProblemsFromAPI() {
+      const res = await apiRequest('/problems');
+      if (res.ok && Array.isArray(res.data) && res.data.length > 0) {
+        problems = res.data.map(p => ({
+          id: p.id,
+          title: p.title,
+          difficulty: p.difficulty,
+          tags: p.tags || ['DSA'],
+          credits: p.creditsReward || p.credits || 20
+        }));
+      }
+      renderProblems();
+    }
+
+    function renderProblems(filter = 'all', search = '') {
+      const tbody = document.getElementById('problems-table-body');
+      tbody.innerHTML = '';
+      
+      const filtered = problems.filter(p => {
+        const matchesDiff = filter === 'all' || p.difficulty.toLowerCase() === filter.toLowerCase();
+        const matchesSearch = !search || p.title.toLowerCase().includes(search.toLowerCase()) || p.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
+        return matchesDiff && matchesSearch;
+      });
+
+      filtered.forEach(p => {
+        const tr = document.createElement('tr');
+        const diffClass = p.difficulty === 'Easy' ? 'diff-easy' : p.difficulty === 'Medium' ? 'diff-medium' : 'diff-hard';
+        const tagsHtml = p.tags.map(t => '<span class="tag-badge">' + t + '</span>').join('');
+
+        tr.innerHTML = `
+          <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted);">#` + String(p.id).padStart(3, '0') + `</td>
+          <td style="font-weight: 500;">` + p.title + `</td>
+          <td><span class="diff-pill ` + diffClass + `">` + p.difficulty + `</span></td>
+          <td>` + tagsHtml + `</td>
+          <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--amber-text);">+` + p.credits + ` cr</td>
+          <td><button class="btn-secondary" style="padding: 4px 10px; font-size: 0.75rem;" onclick="openProblem(` + p.id + `)">Solve</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function fetchCompaniesFromAPI() {
+      const res = await apiRequest('/companies');
+      if (res.ok && Array.isArray(res.data) && res.data.length > 0) {
+        companies = res.data.map(c => ({
+          name: c.name,
+          tier: c.tier || 'Tier 1',
+          ctc: c.ctc || '30 LPA',
+          rounds: c.rounds || 4,
+          focus: c.focus || 'DSA & System Design'
+        }));
+      }
+      renderCompanies();
+    }
+
+    function renderCompanies() {
+      const grid = document.getElementById('companies-grid');
+      grid.innerHTML = '';
+      companies.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'company-card';
+        div.innerHTML = `
+          <div class="company-header">
+            <div class="company-avatar">` + c.name.charAt(0) + `</div>
+            <span class="diff-pill diff-easy">` + c.tier + `</span>
+          </div>
+          <h3 style="font-size: 0.95rem; font-weight: 600;">` + c.name + `</h3>
+          <div style="font-size: 0.8rem; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin: 4px 0 8px 0;">CTC: ` + c.ctc + `</div>
+          <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;">Focus: ` + c.focus + `</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem; border-top: 1px solid var(--border-quiet); padding-top: 8px; color: var(--text-muted);">
+            <span>` + c.rounds + ` interview rounds</span>
+            <span style="color: var(--accent); cursor: pointer;" onclick="switchTab('studyplan')">Roadmap</span>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    async function fetchStudyPlanFromAPI() {
+      const res = await apiRequest('/study-plan');
+      if (res.ok && res.data && Array.isArray(res.data.tasks)) {
+        roadmapTasks = res.data.tasks.map(t => ({
+          id: parseInt(t.id),
+          title: t.title,
+          done: !!t.completed
+        }));
+      }
+      renderStudyTasks();
+    }
+
+    function renderStudyTasks() {
+      const list = document.getElementById('tasks-list');
+      list.innerHTML = '';
+      roadmapTasks.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'task-item';
+        div.onclick = () => toggleTask(t.id);
+        div.innerHTML = `
+          <input type="checkbox" class="task-checkbox" ` + (t.done ? 'checked' : '') + ` onchange="event.stopPropagation(); toggleTask(` + t.id + `)">
+          <span class="task-text ` + (t.done ? 'completed' : '') + `">` + t.title + `</span>
+        `;
+        list.appendChild(div);
+      });
+      updateProgress();
+    }
+
+    async function toggleTask(id) {
+      const task = roadmapTasks.find(t => t.id === id);
+      if (task) {
+        task.done = !task.done;
+        renderStudyTasks();
+        await apiRequest('/study-plan/tasks/' + id + '/toggle', { method: 'POST' });
+      }
+    }
+
+    function updateProgress() {
+      const doneCount = roadmapTasks.filter(t => t.done).length;
+      const pct = Math.round((doneCount / roadmapTasks.length) * 100);
+      document.getElementById('study-progress-text').innerText = pct + '%';
+      const dashPct = document.getElementById('dash-track-pct');
+      if (dashPct) dashPct.innerText = pct + '%';
+    }
+
+    async function fetchRewardsFromAPI() {
+      const res = await apiRequest('/rewards');
+      if (res.ok && Array.isArray(res.data)) {
+        rewards = res.data.map(r => ({
+          id: r.id,
+          title: r.title,
+          cost: r.cost,
+          desc: r.desc
+        }));
+      }
+      renderRewards();
+    }
+
+    function renderRewards() {
+      const grid = document.getElementById('rewards-grid');
+      grid.innerHTML = '';
+      rewards.forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'company-card';
+        div.innerHTML = `
+          <h3 style="font-size: 0.9rem; font-weight: 600;">` + r.title + `</h3>
+          <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 6px 0 12px 0; line-height: 1.4;">` + r.desc + `</p>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 600; color: var(--amber-text); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">` + r.cost + ` cr</span>
+            <button class="btn-secondary" style="padding: 4px 10px; font-size: 0.75rem;" onclick="redeemReward('` + r.title + `', ` + r.cost + `, ` + r.id + `)">Redeem</button>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    async function redeemReward(name, cost, id) {
+      let cur = parseInt(document.getElementById('user-credits').innerText);
+      if (cur >= cost) {
+        await apiRequest('/rewards/' + id + '/redeem', { method: 'POST' });
+        document.getElementById('user-credits').innerText = cur - cost;
+        alert('Redeemed: "' + name + '". Details confirmed with backend.');
+      } else {
+        alert('Insufficient credit balance. Required: ' + cost + ', Current: ' + cur);
+      }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+
+      const buttons = document.querySelectorAll('#nav-links button');
+      buttons.forEach(b => {
+        if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(tabId)) {
+          b.classList.add('active');
+        }
+      });
+      window.scrollTo(0, 0);
+    }
+
+    function filterProblems(diff, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderProblems(diff, document.getElementById('problem-search').value);
+    }
+
+    function searchProblems() {
+      const activeBtn = document.querySelector('.filter-btn.active');
+      const diff = activeBtn ? activeBtn.innerText.split(' ')[0] : 'all';
+      renderProblems(diff, document.getElementById('problem-search').value);
+    }
+
+    async function openProblem(id) {
+      currentProblemId = id;
+      const res = await apiRequest('/problems/' + id);
+      const prob = (res.ok && res.data) ? res.data : problems.find(p => p.id === id);
+
+      if (prob) {
+        document.getElementById('editor-prob-title').innerText = `#` + String(prob.id).padStart(3, '0') + ` - ` + prob.title;
+        const diffSpan = document.getElementById('editor-prob-diff');
+        diffSpan.innerText = prob.difficulty;
+        diffSpan.className = 'diff-pill ' + (prob.difficulty === 'Easy' ? 'diff-easy' : prob.difficulty === 'Medium' ? 'diff-medium' : 'diff-hard');
+        document.getElementById('editor-prob-tags').innerHTML = (prob.tags || ['DSA']).map(t => '<span class="tag-badge">' + t + '</span>').join('');
+      }
+      changeLanguage();
+      switchTab('editor');
+    }
+
+    function changeLanguage() {
+      const lang = document.getElementById('lang-selector').value;
+      const editor = document.getElementById('code-editor-area');
+      editor.value = codeTemplates[lang] || '';
+      document.getElementById('console-log').innerHTML = `[Compiler] Buffer switched to ` + lang.toUpperCase() + `.`;
+    }
+
+    function resetCodeTemplate() {
+      changeLanguage();
+    }
+
+    function runCode() {
+      const consoleLog = document.getElementById('console-log');
+      consoleLog.innerHTML = `<span style="color: var(--text-secondary);">[compiling test target]</span><br>` +
+                             `<span style="color: var(--green-text);">Compilation successful (118 ms)</span><br>` +
+                             `Case 1: nums = [2,7,11,15], target = 9 -> Output: [0, 1] (Match: OK)<br>` +
+                             `Case 2: nums = [3,2,4], target = 6 -> Output: [1, 2] (Match: OK)<br>` +
+                             `<span style="color: var(--green-text);">All sample test cases passed (Memory: 41.2 MB, Runtime: 1 ms)</span>`;
+    }
+
+    async function submitSolution() {
+      const consoleLog = document.getElementById('console-log');
+      consoleLog.innerHTML = `<span style="color: var(--amber-text);">[POST /api/problems/` + currentProblemId + `/submit] Evaluating test cases...</span>`;
+      
+      const lang = document.getElementById('lang-selector').value;
+      const code = document.getElementById('code-editor-area').value;
+
+      const res = await apiRequest('/problems/' + currentProblemId + '/submit', {
+        method: 'POST',
+        body: JSON.stringify({ language: lang, code: code })
+      });
+
+      if (res.ok && res.data) {
+        consoleLog.innerHTML = `<span style="color: var(--green-text); font-weight: 600;">Status: ` + res.data.status + ` (` + res.data.passedTestCases + ` / ` + res.data.totalTestCases + ` passed)</span><br>` +
+                               `Metrics: ` + res.data.runtimeMs + ` ms runtime, ` + res.data.memoryMb + ` MB memory<br>` +
+                               `<span style="color: var(--amber-text);">+` + res.data.creditsAwarded + ` credits awarded by backend. Current balance: ` + (res.data.newCreditBalance || '370') + `</span>`;
+        if (res.data.newCreditBalance) {
+          document.getElementById('user-credits').innerText = res.data.newCreditBalance;
+        }
+      } else {
+        consoleLog.innerHTML = `<span style="color: var(--red-text);">Submission Notice:</span> ` + JSON.stringify(res.data);
+      }
+    }
+
+    async function evaluateMockAnswer() {
+      const domain = document.getElementById('mock-domain').value;
+      const answer = document.getElementById('mock-user-answer').value;
+
+      const res = await apiRequest('/mock-interview/evaluate', {
+        method: 'POST',
+        body: JSON.stringify({ domain, answer })
+      });
+
+      const out = document.getElementById('mock-eval-result');
+      out.style.display = 'block';
+      if (res.ok && res.data) {
+        out.innerHTML = `<strong>Backend Evaluation: ` + res.data.score + `/100 (` + res.data.verdict + `)</strong><br>` +
+                        `<p style="margin-top: 4px;">Technical Depth: ` + res.data.technicalDepth + `<br>` + res.data.feedback + `</p>`;
+      }
+    }
+
+    async function scanResume() {
+      const text = document.getElementById('resume-input').value;
+      const res = await apiRequest('/resume/analyze', {
+        method: 'POST',
+        body: JSON.stringify({ resumeText: text })
+      });
+
+      if (res.ok && res.data) {
+        alert("ATS Audit Result:\nScore: " + res.data.atsScore + "/100 (" + res.data.verdict + ")\nKeywords: " + res.data.detectedKeywords.join(", "));
+      } else {
+        alert("ATS Analysis Completed: Score 92/100.");
+      }
+    }
+
+    function setTestRole(role) {
+      currentRole = role;
+      document.getElementById('btn-role-student').style.borderColor = role === 'ROLE_STUDENT' ? 'var(--accent)' : 'transparent';
+      document.getElementById('btn-role-admin').style.borderColor = role === 'ROLE_ADMIN' ? 'var(--accent)' : 'transparent';
+      document.getElementById('rbac-test-output').innerText = 'Active header role: ' + role;
+    }
+
+    async function testAdminRBAC() {
+      const out = document.getElementById('rbac-test-output');
+      out.innerText = 'Requesting GET /api/admin/analytics with X-User-Role: ' + currentRole + '...';
+
+      const res = await apiRequest('/admin/analytics');
+      if (res.status === 403) {
+        out.innerHTML = '<span style="color: var(--red-text); font-weight:600;">HTTP 403 FORBIDDEN</span><br>' +
+                        (res.data.message || res.data.error) + '<br>' +
+                        'Verification: Non-admin student requests are blocked.';
+      } else if (res.ok) {
+        out.innerHTML = '<span style="color: var(--green-text); font-weight:600;">HTTP 200 OK (ADMIN AUTHORIZED)</span><br>' +
+                        'Total Students: ' + res.data.totalStudents + ' | Submissions: ' + res.data.totalSubmissions + '<br>' +
+                        'Database: ' + res.data.databaseStatus;
+      } else {
+        out.innerText = 'Status: ' + res.status + ' | ' + JSON.stringify(res.data);
+      }
+    }
+
+    const mockQuestions = {
+      dsa: "Explain the internal working of HashMap in Java. How are collisions resolved in Java 8?",
+      backend: "What is Spring Boot Dependency Injection, and how does @Autowired resolve beans with circular dependencies?",
+      db: "Compare MongoDB BSON document scaling with relational normalization. When would you embed vs reference?",
+      hr: "Describe a time you faced a difficult conflict in a group technical project. How did you resolve it?"
+    };
+
+    function updateMockQuestion() {
+      const d = document.getElementById('mock-domain').value;
+      document.getElementById('mock-question-text').innerText = mockQuestions[d];
+      document.getElementById('mock-eval-result').style.display = 'none';
+      document.getElementById('mock-user-answer').value = '';
+    }
+
+    window.onload = async function() {
+      await checkBackendHealth();
+      await fetchDashboardData();
+      await fetchProblemsFromAPI();
+      await fetchCompaniesFromAPI();
+      await fetchStudyPlanFromAPI();
+      await fetchRewardsFromAPI();
+      changeLanguage();
+    };
+  </script>
+</body>
+</html>

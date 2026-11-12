@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: placementpro-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /api/health
+    envVars:
+      - key: SPRING_DATA_MONGODB_DATABASE
+        value: placementpro
+      - key: MONGODB_URI
+        sync: false
+      - key: PLACEMENTPRO_JWT_SECRET
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://khusbusa458-hub.github.io,https://khusbusa458-hub.github.io,http://localhost:3000"

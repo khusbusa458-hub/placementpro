@@ -1,0 +1,21 @@
+{
+  "name": "placementpro",
+  "version": "1.0.0",
+  "description": "PlacementPro – Placement Preparation & Coding Practice Platform",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node api/index.js",
+    "dev": "node api/index.js",
+    "build": "echo 'PlacementPro Vercel Zero-Config Build Complete'"
+  },
+  "keywords": [
+    "placementpro",
+    "capstone",
+    "placement-prep",
+    "spring-boot",
+    "react",
+    "mongodb"
+  ],
+  "author": "Khusbu Kumari Kewat & Sejal Verma",
+  "license": "MIT"
+}
